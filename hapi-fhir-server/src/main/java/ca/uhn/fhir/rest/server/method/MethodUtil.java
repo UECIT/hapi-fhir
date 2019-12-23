@@ -144,6 +144,7 @@ public class MethodUtil {
 						parameter.setRequired(true);
 						parameter.setDeclaredTypes(((RequiredParam) nextAnnotation).targetTypes());
 						parameter.setCompositeTypes(((RequiredParam) nextAnnotation).compositeTypes());
+						parameter.setConstructedType(((RequiredParam) nextAnnotation).constructedType());
 						parameter.setChainlists(((RequiredParam) nextAnnotation).chainWhitelist(), ((RequiredParam) nextAnnotation).chainBlacklist());
 						parameter.setType(theContext, parameterType, innerCollectionType, outerCollectionType);
 						MethodUtil.extractDescription(parameter, annotations);
@@ -154,6 +155,7 @@ public class MethodUtil {
 						parameter.setRequired(false);
 						parameter.setDeclaredTypes(((OptionalParam) nextAnnotation).targetTypes());
 						parameter.setCompositeTypes(((OptionalParam) nextAnnotation).compositeTypes());
+						parameter.setConstructedType(((OptionalParam) nextAnnotation).constructedType());
 						parameter.setChainlists(((OptionalParam) nextAnnotation).chainWhitelist(), ((OptionalParam) nextAnnotation).chainBlacklist());
 						parameter.setType(theContext, parameterType, innerCollectionType, outerCollectionType);
 						MethodUtil.extractDescription(parameter, annotations);
@@ -187,15 +189,11 @@ public class MethodUtil {
 						} else if (EncodingEnum.class.equals(parameterType)) {
 							mode = Mode.ENCODING;
 						} else {
-							StringBuilder b = new StringBuilder();
-							b.append("Method '");
-							b.append(theMethod.getName());
-							b.append("' is annotated with @");
-							b.append(ResourceParam.class.getSimpleName());
-							b.append(" but has a type that is not an implemtation of ");
-							b.append(IBaseResource.class.getCanonicalName());
-							b.append(" or String or byte[]");
-							throw new ConfigurationException(b.toString());
+							String b = "Method '" + theMethod.getName() + "' is annotated with @"
+								+ ResourceParam.class.getSimpleName()
+								+ " but has a type that is not an implementation of "
+								+ IBaseResource.class.getCanonicalName() + " or String or byte[]";
+							throw new ConfigurationException(b);
 						}
 						boolean methodIsOperation = theMethod.getAnnotation(Operation.class) != null;
 						param = new ResourceParameter((Class<? extends IBaseResource>) parameterType, theProvider, mode, methodIsOperation);
@@ -239,7 +237,7 @@ public class MethodUtil {
 							parameterType = newParameterType;
 						}
 					} else if (nextAnnotation instanceof Validate.Mode) {
-						if (parameterType.equals(ValidationModeEnum.class) == false) {
+						if (!parameterType.equals(ValidationModeEnum.class)) {
 							throw new ConfigurationException(
 								"Parameter annotated with @" + Validate.class.getSimpleName() + "." + Validate.Mode.class.getSimpleName() + " must be of type " + ValidationModeEnum.class.getName());
 						}
@@ -262,7 +260,7 @@ public class MethodUtil {
 							}
 						});
 					} else if (nextAnnotation instanceof Validate.Profile) {
-						if (parameterType.equals(String.class) == false) {
+						if (!parameterType.equals(String.class)) {
 							throw new ConfigurationException(
 								"Parameter annotated with @" + Validate.class.getSimpleName() + "." + Validate.Profile.class.getSimpleName() + " must be of type " + String.class.getName());
 						}
@@ -277,8 +275,6 @@ public class MethodUtil {
 								return ParametersUtil.createString(theContext, theObject.toString());
 							}
 						});
-					} else {
-						continue;
 					}
 
 				}

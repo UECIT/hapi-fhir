@@ -30,15 +30,17 @@ import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 
 public final class QueryParameterAndBinder extends BaseBinder<IQueryParameterAnd<?>> implements IParamBinder<IQueryParameterAnd<?>> {
 
-	public QueryParameterAndBinder(Class<? extends IQueryParameterAnd<?>> theType, List<Class<? extends IQueryParameterType>> theCompositeTypes) {
-		super(theType, theCompositeTypes);
+	public QueryParameterAndBinder(
+		Class<? extends IQueryParameterAnd<?>> theType,
+		List<Class<? extends IQueryParameterType>> theCompositeTypes,
+		Class<?> theConstructedType) {
+		super(theType, theCompositeTypes, theConstructedType);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<IQueryParameterOr<?>> encode(FhirContext theContext, IQueryParameterAnd<?> theString) throws InternalErrorException {
-		List<IQueryParameterOr<?>> retVal = (List<IQueryParameterOr<?>>) ((IQueryParameterAnd<?>) theString).getValuesAsQueryTokens();
-		return retVal;
+		return (List<IQueryParameterOr<?>>) theString.getValuesAsQueryTokens();
 	}
 
 	@Override

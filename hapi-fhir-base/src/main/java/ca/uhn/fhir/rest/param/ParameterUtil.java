@@ -68,35 +68,43 @@ public class ParameterUtil {
 				throw new UnsupportedOperationException();
 			case DATE:
 				binder = new QueryParameterAndBinder(DateAndListParam.class,
-					Collections.<Class<? extends IQueryParameterType>>emptyList());
+					Collections.emptyList(),
+					null);
 				break;
 			case NUMBER:
 				binder = new QueryParameterAndBinder(NumberAndListParam.class,
-					Collections.<Class<? extends IQueryParameterType>>emptyList());
+					Collections.emptyList(),
+					null);
 				break;
 			case QUANTITY:
 				binder = new QueryParameterAndBinder(QuantityAndListParam.class,
-					Collections.<Class<? extends IQueryParameterType>>emptyList());
+					Collections.emptyList(),
+					null);
 				break;
 			case REFERENCE:
 				binder = new QueryParameterAndBinder(ReferenceAndListParam.class,
-					Collections.<Class<? extends IQueryParameterType>>emptyList());
+					Collections.emptyList(),
+					null);
 				break;
 			case STRING:
 				binder = new QueryParameterAndBinder(StringAndListParam.class,
-					Collections.<Class<? extends IQueryParameterType>>emptyList());
+					Collections.emptyList(),
+					null);
 				break;
 			case TOKEN:
 				binder = new QueryParameterAndBinder(TokenAndListParam.class,
-					Collections.<Class<? extends IQueryParameterType>>emptyList());
+					Collections.emptyList(),
+					null);
 				break;
 			case URI:
 				binder = new QueryParameterAndBinder(UriAndListParam.class,
-					Collections.<Class<? extends IQueryParameterType>>emptyList());
+					Collections.emptyList(),
+					null);
 				break;
 			case HAS:
 				binder = new QueryParameterAndBinder(HasAndListParam.class,
-					Collections.<Class<? extends IQueryParameterType>>emptyList());
+					Collections.emptyList(),
+					null);
 				break;
 		}
 

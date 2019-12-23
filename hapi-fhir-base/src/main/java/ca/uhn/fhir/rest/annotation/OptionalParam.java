@@ -1,5 +1,6 @@
 package ca.uhn.fhir.rest.annotation;
 
+import ca.uhn.fhir.rest.param.ConstructedParam;
 import java.lang.annotation.ElementType;
 
 /*
@@ -39,9 +40,9 @@ import ca.uhn.fhir.rest.param.ReferenceParam;
 @Target(value=ElementType.PARAMETER)
 public @interface OptionalParam {
 
-	public static final String ALLOW_CHAIN_ANY = "*";
+	String ALLOW_CHAIN_ANY = "*";
 
-	public static final String ALLOW_CHAIN_NOTCHAINED = "";
+	String ALLOW_CHAIN_NOTCHAINED = "";
 
 	/**
 	 * For reference parameters ({@link ReferenceParam}) this value may be
@@ -91,6 +92,16 @@ public @interface OptionalParam {
 	 * </p>
 	 */
 	Class<? extends IQueryParameterType>[] compositeTypes() default {};
+
+	/**
+	 * For constructed parameters ({@link ConstructedParam}) this must be used to indicate the type
+	 * of a simple bean to be populated with the positional composite query parameters.
+	 * <p>
+	 * 	If the parameter annotated with this annotation is not a {@link ConstructedParam},
+	 * 	this value must not be populated.
+	 * </p>
+	 */
+	Class<?> constructedType() default void.class;
 
 	/**
 	 * This is the name for the parameter. Generally this should be a

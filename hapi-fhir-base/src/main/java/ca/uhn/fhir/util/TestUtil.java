@@ -69,7 +69,7 @@ public class TestUtil {
 			}
 		}
 
-		for (Field next : Arrays.asList(theType.getDeclaredFields())) {
+		for (Field next : theType.getDeclaredFields()) {
 			if (Modifier.isStatic(next.getModifiers())) {
 				if (!Modifier.isFinal(next.getModifiers()) && !next.getType().isPrimitive()) {
 					ourLog.info("Clearing value of field: {}", next.toString());
@@ -126,7 +126,7 @@ public class TestUtil {
 		}
 
 		if (ourShouldRandomizeTimezones) {
-			String availableTimeZones[] = {"GMT+08:00", "GMT-05:00", "GMT+00:00", "GMT+03:30"};
+			String[] availableTimeZones = {"GMT+08:00", "GMT-05:00", "GMT+00:00", "GMT+03:30"};
 			String timeZone = availableTimeZones[(int) (Math.random() * availableTimeZones.length)];
 			TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
 		}
