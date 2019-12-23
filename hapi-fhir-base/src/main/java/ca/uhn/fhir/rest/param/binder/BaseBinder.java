@@ -27,29 +27,30 @@ import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.param.CompositeParam;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
+import java.util.stream.Stream;
 
 class BaseBinder<T> {
 	private List<Class<? extends IQueryParameterType>> myCompositeTypes;
 	private Constructor<? extends T> myConstructor;
-	private final Class<? extends T> myType;
+	private final Class<?> myConstructedType;
 
-	public BaseBinder(Class<? extends T> theType, List<Class<? extends IQueryParameterType>> theCompositeTypes) {
-		myType = theType;
+	public BaseBinder(
+		Class<? extends T> theType,
+		List<Class<? extends IQueryParameterType>> theCompositeTypes,
+		Class<?> theConstructedType) {
+
 		myCompositeTypes = theCompositeTypes;
-		
-		
-		if (myType.equals(CompositeParam.class)) {
-			if (myCompositeTypes.size() != 2) {
-				throw new ConfigurationException("Search parameter of type " + myType.getName() + " must have 2 composite types declared in parameter annotation, found " + theCompositeTypes.size());
-			}
+		myConstructedType = theConstructedType;
+
+		if (theType.equals(CompositeParam.class) && theCompositeTypes.size() != 2) {
+			throw new ConfigurationException("Search parameter of type " + theType.getName()
+				+ " must have 2 composite types declared in parameter annotation, found "
+				+ theCompositeTypes.size());
 		}
-		
+
 		try {
-			Class<?>[] types = new Class<?>[myCompositeTypes.size()];
-			for (int i = 0; i < myCompositeTypes.size(); i++) {
-				types[i] = Class.class;
-			}
-			myConstructor = myType.getConstructor(types);
+			Class<?>[] args = getArgs().map(t -> Class.class).toArray(Class[]::new);
+			myConstructor = theType.getConstructor(args);
 		} catch (NoSuchMethodException e) {
 			throw new ConfigurationException("Query parameter type " + theType.getName() + " has no constructor with types " + theCompositeTypes);
 		}
@@ -57,16 +58,14 @@ class BaseBinder<T> {
 
 	public T newInstance() {
 		try {
-			final Object[] args = new Object[myCompositeTypes.size()];
-			for (int i = 0; i < myCompositeTypes.size();i++) {
-				args[i] = myCompositeTypes.get(i);//.newInstance();
-			}
-			
-			T dt = myConstructor.newInstance(args);
-			return dt;
+			return myConstructor.newInstance(getArgs().toArray());
 		} catch (final Exception e) {
 			throw new InternalErrorException(e);
 		}
 	}
 
+	private Stream<Class<?>> getArgs() {
+		return Stream.concat(myCompositeTypes.stream(), Stream.of(myConstructedType))
+			.filter(t -> t != void.class && t != null);
+	}
 }

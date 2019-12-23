@@ -21,6 +21,7 @@ package ca.uhn.fhir.rest.param;
  */
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
@@ -44,17 +45,13 @@ public class CompositeParam<A extends IQueryParameterType, B extends IQueryParam
 		Validate.notNull(theLeftType);
 		Validate.notNull(theRightType);
 		try {
-			myLeftType = theLeftType.newInstance();
-		} catch (InstantiationException e) {
-			throw new ConfigurationException("Failed to instantiate type: " + myLeftType, e);
-		} catch (IllegalAccessException e) {
+			myLeftType = theLeftType.getConstructor().newInstance();
+		} catch (ReflectiveOperationException e) {
 			throw new ConfigurationException("Failed to instantiate type: " + myLeftType, e);
 		}
 		try {
-			myRightType = theRightType.newInstance();
-		} catch (InstantiationException e) {
-			throw new ConfigurationException("Failed to instantiate type: " + myRightType, e);
-		} catch (IllegalAccessException e) {
+			myRightType = theRightType.getConstructor().newInstance();
+		} catch (ReflectiveOperationException e) {
 			throw new ConfigurationException("Failed to instantiate type: " + myRightType, e);
 		}
 	}

@@ -93,6 +93,11 @@ public class SearchParameter extends BaseQueryParameter {
 		ourParamTypes.put(CompositeAndListParam.class, RestSearchParameterTypeEnum.COMPOSITE);
 		ourParamQualifiers.put(RestSearchParameterTypeEnum.COMPOSITE, CollectionUtil.newSet(Constants.PARAMQUALIFIER_MISSING, EMPTY_STRING));
 
+		ourParamTypes.put(ConstructedParam.class, RestSearchParameterTypeEnum.CONSTRUCTED);
+		ourParamTypes.put(ConstructedOrListParam.class, RestSearchParameterTypeEnum.CONSTRUCTED);
+		ourParamTypes.put(ConstructedAndListParam.class, RestSearchParameterTypeEnum.CONSTRUCTED);
+		ourParamQualifiers.put(RestSearchParameterTypeEnum.CONSTRUCTED, CollectionUtil.newSet(Constants.PARAMQUALIFIER_MISSING, EMPTY_STRING));
+
 		ourParamTypes.put(HasParam.class, RestSearchParameterTypeEnum.HAS);
 		ourParamTypes.put(HasOrListParam.class, RestSearchParameterTypeEnum.HAS);
 		ourParamTypes.put(HasAndListParam.class, RestSearchParameterTypeEnum.HAS);
@@ -104,6 +109,7 @@ public class SearchParameter extends BaseQueryParameter {
 
 	}
 
+	private Class<?> myConstructedType;
 	private List<Class<? extends IQueryParameterType>> myCompositeTypes = Collections.emptyList();
 	private List<Class<? extends IBaseResource>> myDeclaredTypes;
 	private String myDescription;
@@ -206,13 +212,13 @@ public class SearchParameter extends BaseQueryParameter {
 		myQualifierWhitelist = new HashSet<>(theChainWhitelist.length);
 		myQualifierWhitelist.add(QUALIFIER_ANY_TYPE);
 
-		for (int i = 0; i < theChainWhitelist.length; i++) {
-			if (theChainWhitelist[i].equals(OptionalParam.ALLOW_CHAIN_ANY)) {
+		for (String s : theChainWhitelist) {
+			if (s.equals(OptionalParam.ALLOW_CHAIN_ANY)) {
 				myQualifierWhitelist.add('.' + OptionalParam.ALLOW_CHAIN_ANY);
-			} else if (theChainWhitelist[i].equals(EMPTY_STRING)) {
+			} else if (s.equals(EMPTY_STRING)) {
 				myQualifierWhitelist.add(".");
 			} else {
-				myQualifierWhitelist.add('.' + theChainWhitelist[i]);
+				myQualifierWhitelist.add('.' + s);
 			}
 		}
 
@@ -226,6 +232,10 @@ public class SearchParameter extends BaseQueryParameter {
 				}
 			}
 		}
+	}
+
+	public void setConstructedType(Class<?> type) {
+		myConstructedType = type;
 	}
 
 	public void setCompositeTypes(Class<? extends IQueryParameterType>[] theCompositeTypes) {
@@ -254,11 +264,11 @@ public class SearchParameter extends BaseQueryParameter {
 		
 		this.myType = type;
 		if (IQueryParameterType.class.isAssignableFrom(type)) {
-			myParamBinder = new QueryParameterTypeBinder((Class<? extends IQueryParameterType>) type, myCompositeTypes);
+			myParamBinder = new QueryParameterTypeBinder((Class<? extends IQueryParameterType>) type, myCompositeTypes, myConstructedType);
 		} else if (IQueryParameterOr.class.isAssignableFrom(type)) {
-			myParamBinder = new QueryParameterOrBinder((Class<? extends IQueryParameterOr<?>>) type, myCompositeTypes);
+			myParamBinder = new QueryParameterOrBinder((Class<? extends IQueryParameterOr<?>>) type, myCompositeTypes, myConstructedType);
 		} else if (IQueryParameterAnd.class.isAssignableFrom(type)) {
-			myParamBinder = new QueryParameterAndBinder((Class<? extends IQueryParameterAnd<?>>) type, myCompositeTypes);
+			myParamBinder = new QueryParameterAndBinder((Class<? extends IQueryParameterAnd<?>>) type, myCompositeTypes, myConstructedType);
 		} else if (String.class.equals(type)) {
 			myParamBinder = new StringBinder();
 			myParamType = RestSearchParameterTypeEnum.STRING;
@@ -302,20 +312,20 @@ public class SearchParameter extends BaseQueryParameter {
 			myParamType = typeEnum;
 		}
 
-		if (myParamType != null) {
-			// ok
-		} else if (StringDt.class.isAssignableFrom(type)) {
-			myParamType = RestSearchParameterTypeEnum.STRING;
-		} else if (BaseIdentifierDt.class.isAssignableFrom(type)) {
-			myParamType = RestSearchParameterTypeEnum.TOKEN;
-		} else if (BaseQuantityDt.class.isAssignableFrom(type)) {
-			myParamType = RestSearchParameterTypeEnum.QUANTITY;
-		} else if (ReferenceParam.class.isAssignableFrom(type)) {
-			myParamType = RestSearchParameterTypeEnum.REFERENCE;
-		} else if (HasParam.class.isAssignableFrom(type)) {
-			myParamType = RestSearchParameterTypeEnum.STRING;
-		} else {
-			throw new ConfigurationException("Unknown search parameter type: " + type);
+		if (myParamType == null) {
+			if (StringDt.class.isAssignableFrom(type)) {
+				myParamType = RestSearchParameterTypeEnum.STRING;
+			} else if (BaseIdentifierDt.class.isAssignableFrom(type)) {
+				myParamType = RestSearchParameterTypeEnum.TOKEN;
+			} else if (BaseQuantityDt.class.isAssignableFrom(type)) {
+				myParamType = RestSearchParameterTypeEnum.QUANTITY;
+			} else if (ReferenceParam.class.isAssignableFrom(type)) {
+				myParamType = RestSearchParameterTypeEnum.REFERENCE;
+			} else if (HasParam.class.isAssignableFrom(type)) {
+				myParamType = RestSearchParameterTypeEnum.STRING;
+			} else {
+				throw new ConfigurationException("Unknown search parameter type: " + type);
+			}
 		}
 
 		// NB: Once this is enabled, we should return true from handlesMissing if

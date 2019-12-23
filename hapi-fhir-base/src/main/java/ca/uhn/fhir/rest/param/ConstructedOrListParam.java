@@ -1,7 +1,7 @@
 package ca.uhn.fhir.rest.param;
 
-import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.util.CoverageIgnore;
+import org.apache.commons.lang3.Validate;
 
 /*
  * #%L
@@ -24,34 +24,30 @@ import ca.uhn.fhir.util.CoverageIgnore;
  */
 
 
-public class CompositeOrListParam<A extends IQueryParameterType, B extends IQueryParameterType> extends BaseOrListParam<CompositeOrListParam<?,?>, CompositeParam<A,B>> {
+public class ConstructedOrListParam<T>
+	extends BaseOrListParam<ConstructedOrListParam<?>, ConstructedParam<T>> {
 
-	private Class<A> myLeftType;
-	private Class<B> myRightType;
+	private Class<T> type;
 
-	public CompositeOrListParam(Class<A> theLeftType, Class<B> theRightType) {
+	public ConstructedOrListParam(Class<T> type) {
 		super();
-		myLeftType = theLeftType;
-		myRightType = theRightType;
+		Validate.notNull(type);
+		this.type = type;
 	}
 
-	public Class<A> getLeftType() {
-		return myLeftType;
-	}
-
-	public Class<B> getRightType() {
-		return myRightType;
+	public Class<T> getType() {
+		return type;
 	}
 
 	@CoverageIgnore
 	@Override
-	CompositeParam<A,B> newInstance() {
-		return new CompositeParam<>(myLeftType, myRightType);
+	ConstructedParam<T> newInstance() {
+		return new ConstructedParam<>(type);
 	}
 
 	@CoverageIgnore
 	@Override
-	public CompositeOrListParam<A, B> addOr(CompositeParam<A, B> theParameter) {
+	public ConstructedOrListParam<T> addOr(ConstructedParam<T> theParameter) {
 		add(theParameter);
 		return this;
 	}

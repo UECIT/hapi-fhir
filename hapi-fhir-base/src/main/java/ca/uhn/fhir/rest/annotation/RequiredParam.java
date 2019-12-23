@@ -30,6 +30,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.param.CompositeParam;
+import ca.uhn.fhir.rest.param.ConstructedParam;
 import ca.uhn.fhir.rest.param.ReferenceParam;
 
 /**
@@ -82,6 +83,16 @@ public @interface RequiredParam {
 	 * </p>
 	 */
 	Class<? extends IQueryParameterType>[] compositeTypes() default {};
+
+	/**
+	 * For constructed parameters ({@link ConstructedParam}) this must be used to indicate the type
+	 * of a simple bean to be populated with the positional composite query parameters.
+	 * <p>
+	 * 	If the parameter annotated with this annotation is not a {@link ConstructedParam},
+	 * 	this value must not be populated.
+	 * </p>
+	 */
+	Class<?> constructedType() default void.class;
 
 	/**
 	 * This is the name for the parameter. Generally this should be a simple string (e.g. "name", or "identifier") which will be the name of the URL parameter used to populate this method parameter.

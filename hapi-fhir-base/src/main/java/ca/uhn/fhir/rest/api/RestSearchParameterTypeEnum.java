@@ -62,13 +62,21 @@ public enum RestSearchParameterTypeEnum {
 	 * A reference to another resource.
 	 */
 	REFERENCE("reference", "http://hl7.org/fhir/search-param-type"),
-	
+
 	/**
 	 * Code Value: <b>composite</b>
 	 *
 	 * A composite search parameter that combines a search on two values together.
 	 */
 	COMPOSITE("composite", "http://hl7.org/fhir/search-param-type"),
+
+	/**
+	 * Code Value: <b>constructed</b>
+	 *
+	 * A composite search parameter that combines a search on multiple values together
+	 * by mapping them all to a POJO constructor.
+	 */
+	CONSTRUCTED("constructed", "http://hl7.org/fhir/search-param-type"),
 	
 	/**
 	 * Code Value: <b>quantity</b>
@@ -111,8 +119,8 @@ public enum RestSearchParameterTypeEnum {
 	 */
 	public static final String VALUESET_NAME = "SearchParamType";
 
-	private static Map<String, RestSearchParameterTypeEnum> CODE_TO_ENUM = new HashMap<String, RestSearchParameterTypeEnum>();
-	private static Map<String, Map<String, RestSearchParameterTypeEnum>> SYSTEM_TO_CODE_TO_ENUM = new HashMap<String, Map<String, RestSearchParameterTypeEnum>>();
+  private static Map<String, RestSearchParameterTypeEnum> CODE_TO_ENUM = new HashMap<>();
+	private static Map<String, Map<String, RestSearchParameterTypeEnum>> SYSTEM_TO_CODE_TO_ENUM = new HashMap<>();
 	
 	private final String myCode;
 	private final String mySystem;
@@ -126,7 +134,7 @@ public enum RestSearchParameterTypeEnum {
 			CODE_TO_ENUM.put(next.getCode(), next);
 			
 			if (!SYSTEM_TO_CODE_TO_ENUM.containsKey(next.getSystem())) {
-				SYSTEM_TO_CODE_TO_ENUM.put(next.getSystem(), new HashMap<String, RestSearchParameterTypeEnum>());
+				SYSTEM_TO_CODE_TO_ENUM.put(next.getSystem(), new HashMap<>());
 			}
 			SYSTEM_TO_CODE_TO_ENUM.get(next.getSystem()).put(next.getCode(), next);			
 		}
@@ -150,8 +158,7 @@ public enum RestSearchParameterTypeEnum {
 	 * Returns the enumerated value associated with this code
 	 */
 	public static RestSearchParameterTypeEnum forCode(String theCode) {
-		RestSearchParameterTypeEnum retVal = CODE_TO_ENUM.get(theCode);
-		return retVal;
+		return CODE_TO_ENUM.get(theCode);
 	}
 
 	/**
