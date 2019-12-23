@@ -6,7 +6,7 @@
 	<groupId>ca.uhn.hapi.fhir</groupId>
 	<artifactId>hapi-fhir</artifactId>
 	<packaging>pom</packaging>
-	<version>4.1.0</version>
+	<version>4.1.0-uecdi</version>
 	<name>HAPI-FHIR</name>
 	<description>An open-source implementation of the FHIR specification in Java.</description>
 	<url>https://hapifhir.io</url>
@@ -24,7 +24,12 @@
 	</issueManagement>
 
 	<distributionManagement>
-		<snapshotRepository>
+		<repository>
+			<id>bintray-ems-test-harness-hapi-fhir</id>
+			<name>ems-test-harness-hapi-fhir</name>
+			<url>https://api.bintray.com/maven/ems-test-harness/hapi-fhir/hapi-fhir/;publish=1</url>
+		</repository>
+		<!--snapshotRepository>
 			<id>ossrh</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
@@ -35,8 +40,8 @@
 		<site>
 			<id>git.server</id>
 			<url>scm:git:git@github.com:jamesagnew/hapi-fhir.git</url>
-		</site>
-	</distributionManagement>
+		</site-->
+</distributionManagement>
 
 	<scm>
 		<connection>scm:git:git@github.com:jamesagnew/hapi-fhir.git</connection>
@@ -54,7 +59,7 @@
 			</snapshots>
 		</repository>
 		-->
-		<repository>
+		<!--repository>
 			<id>oss-snapshot</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 			<snapshots>
@@ -63,6 +68,22 @@
 			<releases>
 				<enabled>false</enabled>
 			</releases>
+		</repository-->
+		<repository>
+			<snapshots>
+				<enabled>
+					false
+				</enabled>
+			</snapshots>
+			<id>
+				bintray-ems-test-harness-hapi-fhir
+			</id>
+			<name>
+				bintray
+			</name>
+			<url>
+				https://dl.bintray.com/ems-test-harness/hapi-fhir
+			</url>
 		</repository>
 	</repositories>
 
@@ -582,7 +603,7 @@
 
 	<properties>
 
-		<fhir_core_version>4.1.0</fhir_core_version>
+		<fhir_core_version>4.1.0-uecdi</fhir_core_version>
 		<ucum_version>1.0.2</ucum_version>
 
 		<!-- configure timestamp in MANIFEST.MF for maven-war-provider -->

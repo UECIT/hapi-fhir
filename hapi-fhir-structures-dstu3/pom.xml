@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ca.uhn.hapi.fhir</groupId>
 		<artifactId>hapi-deployable-pom</artifactId>
-		<version>4.1.0</version>
+		<version>4.1.0-uecdi</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
@@ -13,6 +13,14 @@
 	<packaging>bundle</packaging>
 
 	<name>HAPI FHIR Structures - DSTU3</name>
+
+	<distributionManagement>
+		<repository>
+			<id>bintray-ems-test-harness-hapi-fhir</id>
+			<name>ems-test-harness-hapi-fhir</name>
+			<url>https://api.bintray.com/maven/ems-test-harness/hapi-fhir/hapi-fhir-structures-dstu3/;publish=1</url>
+		</repository>
+	</distributionManagement>
 
 	<reporting>
 		<plugins>
@@ -104,12 +112,12 @@
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>org.hl7.fhir.utilities</artifactId>
-			<version>${fhir_core_version}</version>
+			<version>4.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>org.hl7.fhir.dstu3</artifactId>
-			<version>${fhir_core_version}</version>
+			<version>4.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.fhir</groupId>
@@ -122,7 +130,7 @@
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-validation-resources-dstu3</artifactId>
-			<version>${project.version}</version>
+			<version>4.1.0</version>
 			<scope>test</scope>
 		</dependency>
       <dependency>

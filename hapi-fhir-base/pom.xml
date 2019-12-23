@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>ca.uhn.hapi.fhir</groupId>
 		<artifactId>hapi-deployable-pom</artifactId>
-		<version>4.1.0</version>
+		<version>4.1.0-uecdi</version>
 		<relativePath>../hapi-deployable-pom/pom.xml</relativePath>
 	</parent>
 
@@ -15,6 +15,14 @@
 	<url>http://jamesagnew.github.io/hapi-fhir/</url>
 
 	<name>HAPI FHIR - Core Library</name>
+
+	<distributionManagement>
+		<repository>
+			<id>bintray-ems-test-harness-hapi-fhir</id>
+			<name>ems-test-harness-hapi-fhir</name>
+			<url>https://api.bintray.com/maven/ems-test-harness/hapi-fhir/hapi-fhir-base/;publish=1</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 
