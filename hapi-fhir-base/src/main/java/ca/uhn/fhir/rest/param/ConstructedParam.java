@@ -53,6 +53,12 @@ public class ConstructedParam<T> extends BaseParam implements IQueryParameterTyp
 			: new ConstructorBeanHandler<>(type);
 	}
 
+	@SuppressWarnings("unchecked")
+	public ConstructedParam(T instance) {
+		this((Class<T>) instance.getClass());
+		this.instance = instance;
+	}
+
 	@Override
 	String doGetQueryParameterQualifier() {
 		return null;
