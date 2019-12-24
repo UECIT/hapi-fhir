@@ -18,8 +18,10 @@ public class VersionEnumTest {
 			.collect(Collectors.toList());
 
 		String version = VersionUtil.getVersion();
-		version = "V" + version.replace(".", "_");
+		version = version.replace('.', '_');
+		version = version.replace('-', '_');
 		version = version.replace("-SNAPSHOT", "");
+		version = "V" + version.toUpperCase();
 
 		assertThat(versions, hasItem(version));
 	}
